@@ -18,7 +18,7 @@ static ShowTouchesWindow theWindow;
 
 			}
 			set{ }
-		}
+		} 
 
 
 ```
