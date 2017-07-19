@@ -275,9 +275,15 @@ namespace XamarinShowTouches
 			fingerTipRemovalScheduled = true;
 
 			removalTimer = new Timer(100);
-			removalTimer.Elapsed += new ElapsedEventHandler ((sender, e) => removeInactiveFingerTips ());
-			removalTimer.Enabled = true; 
-
+            removalTimer.AutoReset = false;
+            removalTimer.Elapsed += (sender, e) =>
+            {
+                InvokeOnMainThread(() =>
+                {
+                    removeInactiveFingerTips();
+                });
+            };
+			removalTimer.Enabled = true;
 		}
 
 
@@ -340,11 +346,16 @@ namespace XamarinShowTouches
 			}
 
 			touchView.isFadingOut = true;
+
+
 			var aTimer = new Timer (fadeDuration * 1000);
-			aTimer.Elapsed += new ElapsedEventHandler ((sender, e) => touchView.RemoveFromSuperview ());
-			aTimer.Enabled = true; 
-
-
+            aTimer.AutoReset = false;
+            aTimer.Elapsed += ((sender, e) => {
+                InvokeOnMainThread(() => {
+					touchView.RemoveFromSuperview();
+				});
+            });
+            aTimer.Enabled = true;
 		}
 
 		bool shouldAutomaticallyRemoveFingerTipForTouch(UITouch touch){
